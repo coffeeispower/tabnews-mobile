@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:tabnews/appbar.dart';
-import 'package:tabnews/post.dart';
+import 'package:tabnews/widget_factories/appbar.dart';
+import 'package:tabnews/data_structures/post.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'get_contents.dart';
+import '../../api/fetch_api.dart';
 
 class PostScreen extends StatelessWidget {
   final String username;

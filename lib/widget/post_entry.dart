@@ -1,19 +1,12 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tabnews/post.dart';
-import 'package:http/http.dart' as http;
-import 'package:tabnews/post_screen.dart';
-
-import 'get_contents.dart';
+import 'package:tabnews/data_structures/post.dart';
+import 'package:tabnews/widget/screens/post_screen.dart';
 
 class PostEntry extends StatefulWidget {
-  String username;
-  String slug;
-  late Future<Post> post;
-  Post initialPost;
-  PostEntry(
+  final String username;
+  final String slug;
+  final Post initialPost;
+  const PostEntry(
       {super.key,
       required this.username,
       required this.slug,

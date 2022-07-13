@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:tabnews/post.dart';
+import 'package:tabnews/data_structures/post.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Post>> fetchPosts() async {

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tabnews/get_contents.dart';
+import 'package:tabnews/api/fetch_api.dart';
 
-import 'post.dart';
-import 'post_entry_widget.dart';
+import '../data_structures/post.dart';
+import 'post_entry.dart';
 
 class PostList extends StatefulWidget {
   const PostList({Key? key}) : super(key: key);

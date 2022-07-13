@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tabnews/appbar.dart';
-import 'package:tabnews/post_list.dart';
+import 'package:tabnews/widget_factories/appbar.dart';
+import 'package:tabnews/widget/post_list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
