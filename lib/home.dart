@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tabnews/appbar.dart';
 import 'package:tabnews/post_list.dart';
 
 class Home extends StatefulWidget {
@@ -13,16 +14,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: [
-              Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Image.asset("assets/favicon-dark.png", width: 30)),
-              const Text("TabNews")
-            ],
-          ),
-          elevation: 0),
+      appBar: app_bar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Publish',
