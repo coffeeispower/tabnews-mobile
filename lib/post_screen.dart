@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tabnews/appbar.dart';
 import 'package:tabnews/post.dart';
-
+import 'package:markdown/markdown.dart' as md;
 import 'get_contents.dart';
 
 class PostScreen extends StatelessWidget {
@@ -20,11 +20,11 @@ class PostScreen extends StatelessWidget {
             var post = snapshot.data! as Post;
             return SingleChildScrollView(
                 child: Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   Padding(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           bottom: 40.0, top: 40.0, right: 10, left: 10),
                       child: Text(
                         post.title,
@@ -33,17 +33,28 @@ class PostScreen extends StatelessWidget {
                       )),
                   Card(
                       child: Padding(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           child: MarkdownBody(
-                            data: post.body!,
+                            // Cuidado com a gambiarra:
+                            data: post.body!
+                                .replaceAll(
+                                    RegExp("\\<(\\/)?(bold|strong)\\>"), "**")
+                                .replaceAll(RegExp("\\<h1\\>"), "# ")
+                                .replaceAll(RegExp("\\<h2\\>"), "## ")
+                                .replaceAll(RegExp("\\<h3\\>"), "### ")
+                                .replaceAll(RegExp("\\<h4\\>"), "#### ")
+                                .replaceAll(RegExp("\\<h5\\>"), "##### ")
+                                .replaceAll(RegExp("\\<h6\\>"), "###### ")
+                                .replaceAll(RegExp("\\<\\/*.\\>"), ""),
                             selectable: true,
+                            inlineSyntaxes: [md.InlineHtmlSyntax()],
                             styleSheet: MarkdownStyleSheet(
-                              h1: TextStyle(fontWeight: FontWeight.bold),
-                              h2: TextStyle(fontWeight: FontWeight.bold),
-                              h3: TextStyle(fontWeight: FontWeight.bold),
-                              h4: TextStyle(fontWeight: FontWeight.bold),
-                              h5: TextStyle(fontWeight: FontWeight.bold),
-                              h6: TextStyle(fontWeight: FontWeight.bold),
+                              h1: const TextStyle(fontWeight: FontWeight.bold),
+                              h2: const TextStyle(fontWeight: FontWeight.bold),
+                              h3: const TextStyle(fontWeight: FontWeight.bold),
+                              h4: const TextStyle(fontWeight: FontWeight.bold),
+                              h5: const TextStyle(fontWeight: FontWeight.bold),
+                              h6: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           )))
                 ],
