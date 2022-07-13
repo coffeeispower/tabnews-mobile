@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 AppBar app_bar() {
   return AppBar(
-      title: Row(
+      title: Flex(
+        direction: Axis.horizontal,
         children: [
-          Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Image.asset("assets/favicon-dark.png", width: 30)),
+          Image.asset(
+            "assets/favicon-dark.png",
+            width: 40,
+            height: 40,
+          ),
           const Text("TabNews")
         ],
       ),
