@@ -25,7 +25,8 @@ class PostList extends StatelessWidget {
                 return PostEntry(
                     key: Key(username + slug + index.toString()),
                     username: username,
-                    slug: slug);
+                    slug: slug,
+                    initialPost: posts[index]);
               },
             );
           } else if (snapshot.hasError) {
