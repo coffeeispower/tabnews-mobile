@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tabnews">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="TabNews"
         android:name="${applicationName}"
