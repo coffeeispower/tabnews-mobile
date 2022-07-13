@@ -1,4 +1,4 @@
-class PartialPost {
+class Post {
   final String id;
   final String owner_id;
   final String? parent_id;
@@ -16,7 +16,9 @@ class PartialPost {
   final String? parent_username;
   final int tabcoins;
   final int children_deep_count;
-  const PartialPost({
+  final String? body;
+  const Post({
+    this.body,
     required this.id,
     required this.owner_id,
     this.parent_id,
@@ -35,8 +37,8 @@ class PartialPost {
     required this.tabcoins,
     required this.children_deep_count,
   });
-  factory PartialPost.fromJson(Map<String, dynamic> json) {
-    return PartialPost(
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
         id: json["id"],
         owner_id: json["owner_id"],
         slug: json["slug"],

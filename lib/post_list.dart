@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tabnews/get_contents.dart';
 
 import 'post.dart';
-import 'post_widget.dart';
+import 'post_entry_widget.dart';
 class PostList extends StatefulWidget {
   const PostList({super.key});
   @override
-  _PostListState createState(){
-    return _PostListState();
+  PostListState createState(){
+    return PostListState();
   }
 }
-class _PostListState extends State<PostList> {
+class PostListState extends State<PostList> {
   late Timer timer;
   @override
   void initState() {
@@ -33,7 +32,7 @@ class _PostListState extends State<PostList> {
         future: fetchPosts(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<PartialPost> posts = snapshot.data! as List<PartialPost>;
+            List<Post> posts = snapshot.data! as List<Post>;
             return ListView.separated(
               separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),

@@ -6,17 +6,17 @@ import 'package:tabnews/post.dart';
 import 'package:http/http.dart' as http;
 
 class PostEntry extends StatefulWidget {
-  final PartialPost post;
-  PostEntry({super.key, required this.post});
+  final Post post;
+  const PostEntry({super.key, required this.post});
   @override
-  _PostEntryState createState() {
-    return _PostEntryState(post: post);
+  PostEntryState createState() {
+    return PostEntryState(post: post);
   }
 }
 
-class _PostEntryState extends State<PostEntry> {
-  _PostEntryState({required this.post});
-  PartialPost post;
+class PostEntryState extends State<PostEntry> {
+  PostEntryState({required this.post});
+  Post post;
   late Timer timer;
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _PostEntryState extends State<PostEntry> {
         .then((res) {
 	  if(!mounted) return;
 	  setState(() {
-	    post = PartialPost.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+	    post = Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
 	  });
 	});
     });
