@@ -4,28 +4,10 @@ import 'package:tabnews/get_contents.dart';
 
 import 'post.dart';
 import 'post_entry_widget.dart';
-class PostList extends StatefulWidget {
-  const PostList({super.key});
-  @override
-  PostListState createState(){
-    return PostListState();
-  }
-}
-class PostListState extends State<PostList> {
-  late Timer timer;
-  @override
-  void initState() {
-    super.initState();
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if(!mounted) return;
-      setState((){});
-    });
-  }
-  @override
-  void dispose() {
-    super.dispose();
-    timer.cancel();
-  }
+
+class PostList extends StatelessWidget {
+  const PostList({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -38,7 +20,12 @@ class PostListState extends State<PostList> {
                   const Divider(),
               itemCount: posts.length,
               itemBuilder: (context, index) {
-                return PostEntry(post: posts[index]);
+                var username = posts[index].username;
+                var slug = posts[index].slug;
+                return PostEntry(
+                    key: Key(username + slug + index.toString()),
+                    username: username,
+                    slug: slug);
               },
             );
           } else if (snapshot.hasError) {

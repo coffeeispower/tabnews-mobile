@@ -5,34 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:tabnews/post.dart';
 import 'package:http/http.dart' as http;
 
+import 'get_contents.dart';
+
 class PostEntry extends StatefulWidget {
-  final Post post;
-  const PostEntry({super.key, required this.post});
+  String username;
+  String slug;
+  PostEntry({super.key, required this.username, required this.slug});
   @override
   PostEntryState createState() {
-    // ignore: no_logic_in_create_state
-    return PostEntryState(post: post);
+    return PostEntryState();
   }
 }
 
 class PostEntryState extends State<PostEntry> {
-  PostEntryState({required this.post});
-  Post post;
   late Timer timer;
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      http
-          .get(Uri.parse(
-              'https://tabnews.com.br/api/v1/contents/${post.username}/${post.slug}'))
-          .then((res) {
-        if (!mounted) return;
-        setState(() {
-          post = Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
-        });
-      });
-    });
   }
 
   @override
@@ -43,19 +32,29 @@ class PostEntryState extends State<PostEntry> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        contentPadding: const EdgeInsets.only(top: 15.0, left: 21, right: 21),
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: Text(
-            post.title,
-            style: const TextStyle(fontSize: 20),
-          ),
-        ),
-        subtitle: Text(
-          "${post.tabcoins} tabcoins · ${post.children_deep_count} comentário${post.children_deep_count != 1 ? "s" : ""} · ${post.username}",
-          style: const TextStyle(fontSize: 13),
-        ),
-        onTap: () {});
+    return FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var post = snapshot.data! as Post;
+            return ListTile(
+                contentPadding:
+                    const EdgeInsets.only(top: 15.0, left: 21, right: 21),
+                title: Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Text(
+                    post.title,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
+                subtitle: Text(
+                  "${post.tabcoins} tabcoins · ${post.children_deep_count} comentário${post.children_deep_count != 1 ? "s" : ""} · ${post.username}",
+                  style: const TextStyle(fontSize: 13),
+                ),
+                onTap: () {});
+          } else {
+            return const RefreshProgressIndicator();
+          }
+        },
+        future: fetchPost(widget.username, widget.slug));
   }
 }

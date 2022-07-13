@@ -16,3 +16,11 @@ List<Post> parsePosts(String responseBody) {
 
   return parsed.map<Post>((json) => Post.fromJson(json)).toList();
 }
+
+Future<Post> fetchPost(String username, String slug) {
+  return http
+      .get(Uri.parse('https://tabnews.com.br/api/v1/contents/$username/$slug'))
+      .then((res) {
+    return Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+  });
+}
