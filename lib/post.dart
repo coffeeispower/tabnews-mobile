@@ -39,6 +39,7 @@ class Post {
   });
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
+        body: json["body"],
         id: json["id"],
         owner_id: json["owner_id"],
         slug: json["slug"],
