@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:tabnews/markdown.dart';
 import 'package:tabnews/widget_factories/appbar.dart';
 import 'package:tabnews/data_structures/post.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -34,29 +35,7 @@ class PostScreen extends StatelessWidget {
                   Card(
                       child: Padding(
                           padding: const EdgeInsets.all(20),
-                          child: MarkdownBody(
-                            // Cuidado com a gambiarra:
-                            data: post.body!
-                                .replaceAll(
-                                    RegExp("\\<(\\/)?(bold|strong)\\>"), "**")
-                                .replaceAll(RegExp("\\<h1\\>"), "# ")
-                                .replaceAll(RegExp("\\<h2\\>"), "## ")
-                                .replaceAll(RegExp("\\<h3\\>"), "### ")
-                                .replaceAll(RegExp("\\<h4\\>"), "#### ")
-                                .replaceAll(RegExp("\\<h5\\>"), "##### ")
-                                .replaceAll(RegExp("\\<h6\\>"), "###### ")
-                                .replaceAll(RegExp("\\<\\/*.\\>"), ""),
-                            selectable: true,
-                            inlineSyntaxes: [md.InlineHtmlSyntax()],
-                            styleSheet: MarkdownStyleSheet(
-                              h1: const TextStyle(fontWeight: FontWeight.bold),
-                              h2: const TextStyle(fontWeight: FontWeight.bold),
-                              h3: const TextStyle(fontWeight: FontWeight.bold),
-                              h4: const TextStyle(fontWeight: FontWeight.bold),
-                              h5: const TextStyle(fontWeight: FontWeight.bold),
-                              h6: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          )))
+                          child: markdown(post.body!)))
                 ],
               ),
             ));
