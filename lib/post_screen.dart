@@ -13,7 +13,7 @@ class PostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: app_bar(),
+      appBar: app_bar(context),
       body: FutureBuilder(
         builder: (context, snapshot) {
           if (snapshot.hasData) {

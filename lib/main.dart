@@ -14,9 +14,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TabNews',
-      theme: ThemeData.light(),
-      darkTheme:
-          ThemeData(brightness: Brightness.dark, primaryColor: Colors.black),
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              backgroundColor: Colors.white)),
+      darkTheme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              backgroundColor: Colors.black),
+          brightness: Brightness.dark),
       home: const Home(title: "Home"),
       debugShowCheckedModeBanner: false,
     );
