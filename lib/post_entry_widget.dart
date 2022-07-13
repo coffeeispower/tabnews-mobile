@@ -10,6 +10,7 @@ class PostEntry extends StatefulWidget {
   const PostEntry({super.key, required this.post});
   @override
   PostEntryState createState() {
+    // ignore: no_logic_in_create_state
     return PostEntryState(post: post);
   }
 }
@@ -21,22 +22,25 @@ class PostEntryState extends State<PostEntry> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer){
-      http.get(Uri.parse('https://tabnews.com.br/api/v1/contents/${post.username}/${post.slug}'))
-        .then((res) {
-	  if(!mounted) return;
-	  setState(() {
-	    post = Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
-	  });
-	});
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      http
+          .get(Uri.parse(
+              'https://tabnews.com.br/api/v1/contents/${post.username}/${post.slug}'))
+          .then((res) {
+        if (!mounted) return;
+        setState(() {
+          post = Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+        });
+      });
     });
-
   }
+
   @override
   dispose() {
     super.dispose();
     timer.cancel();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -49,7 +53,7 @@ class PostEntryState extends State<PostEntry> {
           ),
         ),
         subtitle: Text(
-          "${post.tabcoins} tabcoins · ${post.children_deep_count} comentários · ${post.username}",
+          "${post.tabcoins} tabcoins · ${post.children_deep_count} comentário${post.children_deep_count != 1 ? "s" : ""} · ${post.username}",
           style: const TextStyle(fontSize: 13),
         ),
         onTap: () {});
