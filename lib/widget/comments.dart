@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tree_view/tree_view.dart';
 import '../data_structures/post.dart';
 import "../markdown.dart";
 import "../api/fetch_api.dart";
