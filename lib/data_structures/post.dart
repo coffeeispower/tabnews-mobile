@@ -41,18 +41,19 @@ class Post {
   });
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-        children: json["children"]?.map<Post>((e) => Post.fromJson(e)).toList(),
-        body: json["body"],
-        id: json["id"],
-        owner_id: json["owner_id"],
-        slug: json["slug"],
-        title: json["title"],
-        status: json["status"],
-        created_at: json["created_at"],
-        updated_at: json["updated_at"],
-        published_at: json["published_at"],
-        username: json["username"],
-        tabcoins: json["tabcoins"],
-        children_deep_count: json["children_deep_count"]);
+      children: json["children"]?.map<Post>((e) => Post.fromJson(e)).toList(),
+      body: json["body"],
+      id: json["id"],
+      owner_id: json["owner_id"],
+      slug: json["slug"],
+      title: json["title"],
+      status: json["status"],
+      created_at: json["created_at"],
+      updated_at: json["updated_at"],
+      published_at: json["published_at"],
+      username: json["username"],
+      tabcoins: json["tabcoins"],
+      children_deep_count: json["children_deep_count"],
+    );
   }
 }

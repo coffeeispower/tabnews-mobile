@@ -31,26 +31,27 @@ class PostListState extends State<PostList> {
           if (snapshot.hasData) {
             _posts = snapshot.data! as List<Post>;
             return RefreshIndicator(
-                onRefresh: () async {
-                  var newPosts = await fetchPosts();
-                  setState(() {
-                    _posts = newPosts;
-                  });
+              onRefresh: () async {
+                var newPosts = await fetchPosts();
+                setState(() {
+                  _posts = newPosts;
+                });
+              },
+              child: ListView.separated(
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+                itemCount: _posts.length,
+                itemBuilder: (context, index) {
+                  var username = _posts[index].username;
+                  var slug = _posts[index].slug;
+                  return PostEntry(
+                      key: Key(username + slug + index.toString()),
+                      username: username,
+                      slug: slug,
+                      initialPost: _posts[index]);
                 },
-                child: ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(),
-                  itemCount: _posts.length,
-                  itemBuilder: (context, index) {
-                    var username = _posts[index].username;
-                    var slug = _posts[index].slug;
-                    return PostEntry(
-                        key: Key(username + slug + index.toString()),
-                        username: username,
-                        slug: slug,
-                        initialPost: _posts[index]);
-                  },
-                ));
+              ),
+            );
           } else if (snapshot.hasError) {
             return const Center(
               child: Text('Poxa! Não foi possivel carregar os posts!'),

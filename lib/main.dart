@@ -15,20 +15,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TabNews',
       theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-              backgroundColor: Colors.white)),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          backgroundColor: Colors.white,
+        ),
+      ),
       darkTheme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              titleTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-              backgroundColor: Colors.black),
-          brightness: Brightness.dark),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          backgroundColor: Colors.black,
+        ),
+        brightness: Brightness.dark,
+      ),
       home: const Home(title: "Home"),
       debugShowCheckedModeBanner: false,
     );

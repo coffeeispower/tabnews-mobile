@@ -80,13 +80,14 @@ class Username extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: Colors.grey[700],
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Text(
-            username,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ));
+      color: Colors.grey[700],
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Text(
+          username,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }
