@@ -3,7 +3,7 @@ class Post {
   final String owner_id;
   final String? parent_id;
   final String slug;
-  final String title;
+  final String? title;
   final String status;
   final String? source_url;
   final String created_at;
@@ -17,7 +17,9 @@ class Post {
   final int tabcoins;
   final int children_deep_count;
   final String? body;
+  final List<Post>? children;
   const Post({
+    this.children,
     this.body,
     required this.id,
     required this.owner_id,
@@ -39,6 +41,7 @@ class Post {
   });
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
+        children: json["children"]?.map<Post>((e) => Post.fromJson(e)).toList(),
         body: json["body"],
         id: json["id"],
         owner_id: json["owner_id"],

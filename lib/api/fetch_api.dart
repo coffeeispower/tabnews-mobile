@@ -24,3 +24,12 @@ Future<Post> fetchPost(String username, String slug) {
     return Post.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
   });
 }
+
+Future<List<Post>> fetchChildren(String username, String slug) async {
+  var res = await http.get(Uri.parse(
+      'https://tabnews.com.br/api/v1/contents/$username/$slug/children'));
+
+  return (jsonDecode(res.body) as List<dynamic>)
+      .map((e) => Post.fromJson(e))
+      .toList();
+}

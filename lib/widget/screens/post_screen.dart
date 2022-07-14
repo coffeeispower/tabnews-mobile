@@ -5,6 +5,7 @@ import 'package:tabnews/widget_factories/appbar.dart';
 import 'package:tabnews/data_structures/post.dart';
 import 'package:markdown/markdown.dart' as md;
 import '../../api/fetch_api.dart';
+import '../comments.dart';
 
 class PostScreen extends StatelessWidget {
   final String username;
@@ -28,14 +29,15 @@ class PostScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: 40.0, top: 40.0, right: 10, left: 10),
                       child: Text(
-                        post.title,
+                        post.title!,
                         style: const TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
                       )),
                   Card(
                       child: Padding(
                           padding: const EdgeInsets.all(20),
-                          child: markdown(post.body!)))
+                          child: markdown(post.body!))),
+                  CommentsLoader(username: username, slug: slug)
                 ],
               ),
             ));

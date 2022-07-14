@@ -25,7 +25,7 @@ class PostEntryState extends State<PostEntry> {
         title: Padding(
           padding: const EdgeInsets.only(bottom: 15.0),
           child: Text(
-            widget.initialPost.title,
+            widget.initialPost.title!,
             style: const TextStyle(fontSize: 20),
           ),
         ),

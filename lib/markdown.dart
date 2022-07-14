@@ -14,7 +14,6 @@ Widget markdown(String markdown) {
         .replaceAll(RegExp("\\<h5\\>"), "##### ")
         .replaceAll(RegExp("\\<h6\\>"), "###### ")
         .replaceAll(RegExp("\\<\\/*.\\>"), ""),
-    selectable: true,
     inlineSyntaxes: [md.InlineHtmlSyntax()],
     styleSheet: MarkdownStyleSheet(
       h1: const TextStyle(fontWeight: FontWeight.bold),
