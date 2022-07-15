@@ -20,32 +20,34 @@ class PostEntry extends StatefulWidget {
 class PostEntryState extends State<PostEntry> {
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: "post${widget.username}${widget.slug}",
-      child: Card(
-        child: ListTile(
-          contentPadding: const EdgeInsets.all(15),
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(15),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 15.0),
+          child: Hero(
+            tag: "post${widget.username}${widget.slug}",
             child: Text(
               widget.initialPost.title!,
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
-          subtitle: Text(
-            "${widget.initialPost.tabcoins} tabcoins · ${widget.initialPost.children_deep_count} comentário${widget.initialPost.children_deep_count != 1 ? "s" : ""} · ${widget.initialPost.username}",
-            style: const TextStyle(fontSize: 13),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    PostScreen(username: widget.username, slug: widget.slug),
-              ),
-            );
-          },
         ),
+        subtitle: Text(
+          "${widget.initialPost.tabcoins} tabcoins · ${widget.initialPost.children_deep_count} comentário${widget.initialPost.children_deep_count != 1 ? "s" : ""} · ${widget.initialPost.username}",
+          style: const TextStyle(fontSize: 13),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PostScreen(
+                  username: widget.username,
+                  slug: widget.slug,
+                  title: widget.initialPost.title!),
+            ),
+          );
+        },
       ),
     );
   }
