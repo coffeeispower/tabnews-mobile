@@ -15,7 +15,7 @@ AppBar appbar(BuildContext context) {
               height: 35,
             ),
           ),
-          const Text("TabNews")
+          const Text("TabNews"),
         ],
       ),
       elevation: 0);

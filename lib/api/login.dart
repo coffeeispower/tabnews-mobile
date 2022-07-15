@@ -42,6 +42,6 @@ Future<String> login(String email, String password) async {
     final response_body = jsonDecode(response.body);
     final action = response_body["action"];
     final message = response_body["message"];
-    throw "Login falhou: $message: $action";
+    throw "Login falhou: $message $action";
   }
 }
