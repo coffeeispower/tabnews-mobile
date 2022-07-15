@@ -79,6 +79,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
     return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: HighlightView(
@@ -104,7 +105,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           textStyle: GoogleFonts.jetBrainsMono(),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
     );
   }
 }
