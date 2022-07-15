@@ -27,7 +27,8 @@ class CommentsLoader extends StatelessWidget {
 
 class Comments extends StatelessWidget {
   final List<Post> comments;
-  const Comments({super.key, required this.comments});
+  const Comments({super.key, required this.comments, this.depth = 0});
+  final int depth;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -36,7 +37,7 @@ class Comments extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         var comment = comments[index];
-        return Comment(comment: comment);
+        return Comment(comment: comment, depth: depth);
       },
     );
   }
@@ -46,25 +47,34 @@ class Comment extends StatelessWidget {
   const Comment({
     Key? key,
     required this.comment,
+    this.depth = 0,
   }) : super(key: key);
 
   final Post comment;
-
+  final int depth;
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Username(username: comment.username),
-            markdown(comment.body!),
-            Comments(comments: comment.children!)
-          ],
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 10.0 * depth),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Flex(
+                direction: Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Username(username: comment.username),
+                  markdown(comment.body!),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
+        Comments(comments: comment.children!, depth: depth + 1)
+      ],
     );
   }
 }
@@ -80,7 +90,6 @@ class Username extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey[700],
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Text(
