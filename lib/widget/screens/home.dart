@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: app_bar(context),
+      appBar: appbar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Publish',

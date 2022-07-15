@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tabnews/markdown.dart';
 import 'package:tabnews/widget_factories/appbar.dart';
 import 'package:tabnews/data_structures/post.dart';
-import 'package:markdown/markdown.dart' as md;
 import '../../api/fetch_api.dart';
 import '../comments.dart';
 
@@ -19,7 +18,7 @@ class PostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: app_bar(context),
+      appBar: appbar(context),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-AppBar app_bar(BuildContext context) {
+AppBar appbar(BuildContext context) {
   return AppBar(
       centerTitle: true,
       title: Row(
@@ -8,7 +8,7 @@ AppBar app_bar(BuildContext context) {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.only(right: 10),
             child: Image.asset(
               "assets/favicon-${MediaQuery.of(context).platformBrightness.name}.png",
               width: 35,
