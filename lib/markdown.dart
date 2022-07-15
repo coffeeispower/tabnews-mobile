@@ -36,10 +36,18 @@ class Markdown extends StatelessWidget {
         blockquote: const TextStyle(color: Colors.transparent),
         blockquotePadding: const EdgeInsets.all(10),
         blockquoteDecoration: BoxDecoration(
+          border: Border.all(
+            color: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                        .platformBrightness
+                        .name ==
+                    "dark"
+                ? Colors.grey[500]!
+                : Colors.grey[900]!,
+            width: 1,
+          ),
           color: MediaQuery.of(context).platformBrightness.name == "light"
               ? Colors.grey[300]
               : Colors.grey[900],
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         code: const TextStyle(
             backgroundColor: Colors.transparent, fontFamily: "monospace"),
@@ -78,8 +86,19 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                      .platformBrightness
+                      .name ==
+                  "dark"
+              ? Colors.grey[500]!
+              : Colors.grey[900]!,
+          width: 1,
+        ),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: HighlightView(
