@@ -78,27 +78,33 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
-    return HighlightView(
-      // The original code to be highlighted
-      element.textContent,
+    return Padding(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: HighlightView(
+          // The original code to be highlighted
+          element.textContent,
 
-      // Specify language
-      // It is recommended to give it a value for performance
-      language: language,
+          // Specify language
+          // It is recommended to give it a value for performance
+          language: language,
 
-      // Specify highlight theme
-      // All available themes are listed in `themes` folder
-      theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                  .platformBrightness ==
-              Brightness.light
-          ? atomOneLightTheme
-          : atomOneDarkTheme,
+          // Specify highlight theme
+          // All available themes are listed in `themes` folder
+          theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                      .platformBrightness ==
+                  Brightness.light
+              ? atomOneLightTheme
+              : atomOneDarkTheme,
 
-      // Specify padding
-      padding: const EdgeInsets.all(8),
+          // Specify padding
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
 
-      // Specify text style
-      textStyle: GoogleFonts.jetBrainsMono(),
+          // Specify text style
+          textStyle: GoogleFonts.jetBrainsMono(),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
     );
   }
 }
