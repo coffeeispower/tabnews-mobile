@@ -69,7 +69,7 @@ class Comment extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Username(username: comment.username),
-                    markdown(comment.body!),
+                    Markdown(comment.body!),
                   ],
                 ),
               ),

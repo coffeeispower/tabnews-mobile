@@ -2,26 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-Widget markdown(String markdown) {
-  return MarkdownBody(
-    // CHAOS ALLERT!
-    data: markdown
-        .replaceAll(RegExp("\\<(\\/)?(bold|strong)\\>"), "**")
-        .replaceAll(RegExp("\\<h1\\>"), "# ")
-        .replaceAll(RegExp("\\<h2\\>"), "## ")
-        .replaceAll(RegExp("\\<h3\\>"), "### ")
-        .replaceAll(RegExp("\\<h4\\>"), "#### ")
-        .replaceAll(RegExp("\\<h5\\>"), "##### ")
-        .replaceAll(RegExp("\\<h6\\>"), "###### ")
-        .replaceAll(RegExp("\\<\\/*.\\>"), ""),
-    inlineSyntaxes: [md.InlineHtmlSyntax()],
-    styleSheet: MarkdownStyleSheet(
-      h1: const TextStyle(fontWeight: FontWeight.bold),
-      h2: const TextStyle(fontWeight: FontWeight.bold),
-      h3: const TextStyle(fontWeight: FontWeight.bold),
-      h4: const TextStyle(fontWeight: FontWeight.bold),
-      h5: const TextStyle(fontWeight: FontWeight.bold),
-      h6: const TextStyle(fontWeight: FontWeight.bold),
-    ),
-  );
+class Markdown extends StatelessWidget {
+  const Markdown(this.body) : super(key: null);
+  final String body;
+  @override
+  Widget build(BuildContext context) {
+    return MarkdownBody(
+      // CHAOS ALLERT!
+      data: body
+          .replaceAll(RegExp("\\<(\\/)?(bold|strong)\\>"), "**")
+          .replaceAll(RegExp("\\<h1\\>"), "# ")
+          .replaceAll(RegExp("\\<h2\\>"), "## ")
+          .replaceAll(RegExp("\\<h3\\>"), "### ")
+          .replaceAll(RegExp("\\<h4\\>"), "#### ")
+          .replaceAll(RegExp("\\<h5\\>"), "##### ")
+          .replaceAll(RegExp("\\<h6\\>"), "###### ")
+          .replaceAll(RegExp("\\<\\/*.\\>"), ""),
+      inlineSyntaxes: [md.InlineHtmlSyntax()],
+      extensionSet: md.ExtensionSet(
+        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+        [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+      ),
+      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+        blockquote: const TextStyle(color: Colors.white),
+        blockquotePadding: const EdgeInsets.all(10),
+        blockquoteDecoration: BoxDecoration(
+          color: MediaQuery.of(context).platformBrightness.name == "light"
+              ? Colors.grey[300]
+              : Colors.grey[900],
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+    );
+  }
 }

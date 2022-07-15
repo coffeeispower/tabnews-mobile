@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tabnews/markdown.dart';
 import 'package:tabnews/widget_factories/appbar.dart';
 import 'package:tabnews/data_structures/post.dart';
@@ -50,7 +49,7 @@ class PostScreen extends StatelessWidget {
                         Card(
                           child: Padding(
                             padding: const EdgeInsets.all(20),
-                            child: markdown(post.body!),
+                            child: Markdown(post.body!),
                           ),
                         ),
                         CommentsLoader(username: username, slug: slug)
