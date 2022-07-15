@@ -58,17 +58,20 @@ class Comment extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 10.0 * depth),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Flex(
-                direction: Axis.vertical,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Username(username: comment.username),
-                  markdown(comment.body!),
-                ],
+          child: SizedBox(
+            width: double.infinity,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Flex(
+                  direction: Axis.vertical,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Username(username: comment.username),
+                    markdown(comment.body!),
+                  ],
+                ),
               ),
             ),
           ),
