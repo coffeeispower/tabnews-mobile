@@ -16,51 +16,54 @@ class PostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: app_bar(context),
-      body: FutureBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var post = snapshot.data! as Post;
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 40.0,
-                        top: 40.0,
-                        right: 10,
-                        left: 10,
-                      ),
-                      child: Text(
-                        post.title!,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+      body: Hero(
+        tag: 'post$username$slug',
+        child: FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var post = snapshot.data! as Post;
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 40.0,
+                          top: 40.0,
+                          right: 10,
+                          left: 10,
+                        ),
+                        child: Text(
+                          post.title!,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: markdown(post.body!),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: markdown(post.body!),
+                        ),
                       ),
-                    ),
-                    CommentsLoader(username: username, slug: slug)
-                  ],
+                      CommentsLoader(username: username, slug: slug)
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("Não foi possivel carregar o post!"),
-            );
-          }
+              );
+            }
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Não foi possivel carregar o post!"),
+              );
+            }
 
-          return const Center(child: CircularProgressIndicator());
-        },
-        future: fetchPost(username, slug),
+            return const Center(child: CircularProgressIndicator());
+          },
+          future: fetchPost(username, slug),
+        ),
       ),
     );
   }
