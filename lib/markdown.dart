@@ -24,9 +24,18 @@ class Markdown extends StatelessWidget {
         [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
       ),
       styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-        blockquote: const TextStyle(color: Colors.white),
+        blockquote: const TextStyle(color: Colors.transparent),
         blockquotePadding: const EdgeInsets.all(10),
         blockquoteDecoration: BoxDecoration(
+          color: MediaQuery.of(context).platformBrightness.name == "light"
+              ? Colors.grey[300]
+              : Colors.grey[900],
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+        code: const TextStyle(
+            backgroundColor: Colors.transparent, fontFamily: "monospace"),
+        codeblockPadding: const EdgeInsets.all(10),
+        codeblockDecoration: BoxDecoration(
           color: MediaQuery.of(context).platformBrightness.name == "light"
               ? Colors.grey[300]
               : Colors.grey[900],
