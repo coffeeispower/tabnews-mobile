@@ -46,26 +46,16 @@ class Markdown extends StatelessWidget {
             width: 1,
           ),
           color: MediaQuery.of(context).platformBrightness.name == "light"
-              ? Colors.grey[300]
-              : Colors.grey[900],
-        ),
-        code: const TextStyle(
-            backgroundColor: Colors.transparent, fontFamily: "monospace"),
-        codeblockPadding: const EdgeInsets.all(10),
-        codeblockDecoration: BoxDecoration(
-          color: MediaQuery.of(context).platformBrightness.name == "light"
-              ? Colors.grey[300]
-              : Colors.grey[900],
+              ? const Color(0xfffafafa)
+              : const Color(0xff282c34),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
       ),
       selectable: true,
       onTapLink: (text, href, title) async {
-        print("Clicked on link!");
         if (href == null) {
           return;
         }
-        print("href = '$href', text = '$text' title = '$title'");
         if (!await canLaunchUrlString(href)) {
           return;
         }
