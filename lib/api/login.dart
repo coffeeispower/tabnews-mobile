@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // Checks if expires_at dat is on the future
 Future<bool> isLoggedIn() async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   if (await storage.read(key: "token") == null) {
     return false;
   }
@@ -15,7 +15,7 @@ Future<bool> isLoggedIn() async {
 
 /* Logs into tabnews.com.br with email and password and stores the token */
 Future<String> login(String email, String password) async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final response = await http.post(
     Uri.parse('https://www.tabnews.com.br/api/v1/sessions'),
     headers: {
@@ -43,5 +43,61 @@ Future<String> login(String email, String password) async {
     final action = response_body["action"];
     final message = response_body["message"];
     throw "Login falhou: $message $action";
+  }
+}
+
+class User {
+  final String id;
+  final String username;
+  final String email;
+  final List<String> features;
+  final int tabcoins;
+  final int tabcash;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  User({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.features,
+    required this.tabcoins,
+    required this.tabcash,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      features: json['features'].cast<String>(),
+      tabcoins: json['tabcoins'],
+      tabcash: json['tabcash'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+}
+
+Future<User> fetchUser() async {
+  const storage = FlutterSecureStorage();
+  final token = await storage.read(key: "token");
+  if (token == null) {
+    throw "Não está logado";
+  }
+  final response = await http.get(
+    Uri.parse('https://www.tabnews.com.br/api/v1/user'),
+    headers: {
+      "Accept": "application/json",
+      "Cookie": "session_id=$token",
+    },
+  );
+  if (response.statusCode == 200) {
+    final user = User.fromJson(jsonDecode(response.body));
+    return user;
+  } else {
+    throw "Erro ao obter usuário";
   }
 }
