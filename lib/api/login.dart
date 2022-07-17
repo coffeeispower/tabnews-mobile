@@ -81,12 +81,12 @@ class User {
   }
 }
 
-Future<User> fetchUser() async {
+Future<User?> fetchUser() async {
+  if (!await isLoggedIn()) {
+    return null;
+  }
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: "token");
-  if (token == null) {
-    throw "Não está logado";
-  }
   final response = await http.get(
     Uri.parse('https://www.tabnews.com.br/api/v1/user'),
     headers: {

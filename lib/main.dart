@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tabnews/api/login.dart';
 
 import 'widget/screens/home.dart';
 
@@ -12,34 +14,38 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TabNews',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(
-            color: Colors.black,
+    return FutureProvider<User?>(
+      initialData: null,
+      create: (_) => fetchUser(),
+      child: MaterialApp(
+        title: 'TabNews',
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            backgroundColor: Colors.white,
           ),
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          backgroundColor: Colors.white,
         ),
-      ),
-      darkTheme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        darkTheme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            backgroundColor: Colors.black,
           ),
-          backgroundColor: Colors.black,
+          brightness: Brightness.dark,
         ),
-        brightness: Brightness.dark,
+        home: const Home(title: "Home"),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const Home(title: "Home"),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
