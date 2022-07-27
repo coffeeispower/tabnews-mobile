@@ -59,15 +59,15 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.create),
-            label: 'write',
+            label: 'Write',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'search',
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_vert),
-            label: 'config',
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
