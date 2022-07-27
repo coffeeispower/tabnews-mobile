@@ -75,7 +75,6 @@ class _HomeState extends State<Home> {
         onTap: _onItemTapped,
       ),
 
-      //body: const PostList(),
     );
   }
 }
