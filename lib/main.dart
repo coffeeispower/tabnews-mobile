@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabnews/api/login.dart';
-
 import 'widget/screens/home.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+
+void main() => runApp(const MyApp()); 
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -17,8 +16,10 @@ class MyApp extends StatelessWidget {
     return FutureProvider<User?>(
       initialData: null,
       create: (_) => fetchUser(),
+
       child: MaterialApp(
         title: 'TabNews',
+
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
             iconTheme: IconThemeData(
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
         ),
+
         darkTheme: ThemeData(
           appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
@@ -39,10 +41,11 @@ class MyApp extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
-            backgroundColor: Colors.black,
+            backgroundColor: Color.fromARGB(255, 26, 25, 25),
           ),
           brightness: Brightness.dark,
         ),
+
         home: const Home(title: "Home"),
         debugShowCheckedModeBanner: false,
       ),
