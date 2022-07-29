@@ -20,15 +20,11 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = <Widget>[
     PostList(),
     Text(
-      'Index 1: Creater',
+      'Index 1: Search',
       style: optionStyle,
     ),
     Text(
-      'Index 2: search',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Settings',
+      'Index 2: Settings',
       style: optionStyle,
     ),
   ];
@@ -48,17 +44,25 @@ class _HomeState extends State<Home> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (!await isLoggedIn()) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          }
+        },
+        tooltip: 'Publish',
+        elevation: 10,
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.create),
-            label: 'Write',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
