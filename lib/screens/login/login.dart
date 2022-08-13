@@ -1,7 +1,7 @@
 // Login Screen widget in flutter
 
 import 'package:flutter/material.dart';
-import 'package:tabnews/api/login.dart';
+import 'package:tabnews/api/login_api.dart';
 import 'package:tabnews/components/appbar/appbar.dart';
 
 class Login extends StatefulWidget {
