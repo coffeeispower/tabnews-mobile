@@ -2,13 +2,12 @@
 import 'package:flutter/material.dart';
 
 //import modules
-import 'package:tabnews/api/login.dart';
+import 'package:tabnews/api/login_api.dart';
 import 'package:tabnews/screens/login/login.dart';
+import 'package:tabnews/screens/config_page/config_page.dart';
 
 //list of items
 enum Menu { itemOne, itemTwo, itemThree, itemFour }
-
-void setState(Null Function() param0) {}
 
 PopupMenuButton popupMenuButton(BuildContext context) {
   return PopupMenuButton<Menu>(
@@ -25,7 +24,7 @@ PopupMenuButton popupMenuButton(BuildContext context) {
           } else {}
           break;
         //Menu --> go to the page that shows the contents of the user
-        case 'itemTwe':
+        case 'itemTwo':
           if (!await isLoggedIn()) {
             Navigator.push(
               context,
@@ -35,6 +34,10 @@ PopupMenuButton popupMenuButton(BuildContext context) {
           break;
         //Menu --> go to the config page
         case 'itemThree':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ConfigPage()),
+          );
           break;
       }
     },
@@ -51,7 +54,7 @@ PopupMenuButton popupMenuButton(BuildContext context) {
       ),
       const PopupMenuItem<Menu>(
         value: Menu.itemThree,
-        child: Text('Conta'),
+        child: Text('Configurações'),
       ),
     ],
   );
