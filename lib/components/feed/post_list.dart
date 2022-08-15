@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+
+//import modules
 import 'package:tabnews/api/fetch_api.dart';
 
-import '../data_structures/post.dart';
-import 'post_entry.dart';
+import '../../data_structures/post.dart';
+import '../post_entry/post_entry.dart';
 
 class PostList extends StatefulWidget {
   const PostList({Key? key}) : super(key: key);
@@ -37,9 +39,7 @@ class PostListState extends State<PostList> {
                   _posts = newPosts;
                 });
               },
-              child: ListView.separated(
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
+              child: ListView.builder(
                 itemCount: _posts.length,
                 itemBuilder: (context, index) {
                   var username = _posts[index].username;

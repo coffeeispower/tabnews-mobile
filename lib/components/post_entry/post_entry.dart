@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tabnews/data_structures/post.dart';
-import 'package:tabnews/widget/screens/post_screen.dart';
+import 'package:tabnews/screens/post_screen/post_screen.dart';
 
 class PostEntry extends StatefulWidget {
   final String username;

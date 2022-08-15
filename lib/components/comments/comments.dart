@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../data_structures/post.dart';
-import "../markdown.dart";
-import "../api/fetch_api.dart";
+import '../../data_structures/post.dart';
+import '../markdown/markdown.dart';
+import '../../api/fetch_api.dart';
 
 class CommentsLoader extends StatelessWidget {
   final String username, slug;
