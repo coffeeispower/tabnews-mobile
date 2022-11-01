@@ -1,0 +1,1 @@
+const baseUrl = "https://tabnews.com.br/api/v1";
