@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import "package:http/http.dart" as http;
-import 'package:tabnews_flutter/client/constants.dart';
-import 'package:tabnews_flutter/client/entities/content.dart';
-
+import 'entities/auth.dart';
+import 'constants.dart';
+import 'entities/content.dart';
 import 'entities/user.dart';
 
 class TabNewsClient {
@@ -61,6 +60,39 @@ class TabNewsClient {
       content.children = await getChildren(content);
     }
     return content;
+  }
+
+  static Future<Session> login(LoginRequest loginRequest) async {
+    var response = await client.post(
+        Uri.https(baseUrl, "/sessions"),
+        body: loginRequest.toJson()
+    );
+    if (response.statusCode != 201) {
+      return Future.error(Exception(response.statusCode));
+    }
+    var json = jsonDecode(response.body);
+    var session = Session.fromJson(json);
+    return session;
+  }
+  static Future<void> recoveryByUsername(String username) async {
+    var client = http.Client();
+    var response = await client.post(
+        Uri.parse("$baseUrl/recovery"),
+        body: {username: username}
+    );
+    if (response.statusCode != 201) {
+      return Future.error(Exception(response.statusCode));
+    }
+  }
+
+  static Future<void> recoveryByEmail(String email) async {
+    var response = await client.post(
+        Uri.parse("$baseUrl/recovery"),
+        body: {email: email}
+    );
+    if (response.statusCode != 201) {
+      return Future.error(Exception(response.statusCode));
+    }
   }
 }
 enum Strategy {
