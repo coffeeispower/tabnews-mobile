@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../client.dart';
+
 part "content.g.dart";
 
 @JsonSerializable()
@@ -9,7 +11,8 @@ class Content {
   final String? body, source_url, parent_id, title;
   final DateTime created_at, updated_at, published_at;
   final DateTime? deleted_at;
-  final int tabcoins, children_deep_count;
+  final int children_deep_count;
+  int tabcoins;
   List<Content>? children;
 
   Content(
@@ -34,6 +37,12 @@ class Content {
 
   factory Content.fromJson(Map<String, dynamic> json) =>
       _$ContentFromJson(json);
+  Future<void> upvote(TabNewsClient client) async {
+    await client.upvote(this);
+  }
+  Future<void> downvote(TabNewsClient client) async {
+    await client.downvote(this);
+  }
 }
 
 @JsonSerializable()

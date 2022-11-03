@@ -16,7 +16,6 @@ class TabNewsClient {
 
   Map<String, String> authHeaders() {
     return {
-      "Content-Type": "application/json",
       "Cookie": "session_id=${session.token}"
     };
   }
@@ -29,7 +28,7 @@ class TabNewsClient {
 
   Future<User> getUser() async {
     var response =
-    await client.get(Uri.parse("$baseUrl/user"), headers: authHeaders());
+        await client.get(Uri.parse("$baseUrl/user"), headers: authHeaders());
 
     if (response.statusCode != 200) {
       return Future.error(Exception(response.statusCode));
@@ -51,11 +50,10 @@ class TabNewsClient {
     return content;
   }
 
-  static Future<List<Content>> listContents(int page, int perPage,
-      Strategy strategy) async {
-    var response = await client.get(
-        Uri.parse(
-            "$baseUrl/contents?page=$page&per_page=$perPage&strategy=$strategy"));
+  static Future<List<Content>> listContents(
+      int page, int perPage, Strategy strategy) async {
+    var response = await client.get(Uri.parse(
+        "$baseUrl/contents?page=$page&per_page=$perPage&strategy=$strategy"));
 
     if (response.statusCode != 200) {
       return Future.error(Exception(response.statusCode));
@@ -66,10 +64,8 @@ class TabNewsClient {
   }
 
   static Future<List<Content>> getChildren(Content content) async {
-    var response = await client.get(
-        Uri.parse(
-            "$baseUrl/contents/${content.owner_username}/${content
-                .slug}/children"));
+    var response = await client.get(Uri.parse(
+        "$baseUrl/contents/${content.owner_username}/${content.slug}/children"));
 
     if (response.statusCode != 200) {
       return Future.error(Exception(response.statusCode));
@@ -78,10 +74,10 @@ class TabNewsClient {
     return List.of(json.map((e) => Content.fromJson(e)));
   }
 
-  static Future<Content> getContent(String author, String slug,
-      bool fetchChildren) async {
-    var response = await client
-        .get(Uri.parse("$baseUrl/contents/$author/$slug"));
+  static Future<Content> getContent(
+      String author, String slug, bool fetchChildren) async {
+    var response =
+        await client.get(Uri.parse("$baseUrl/contents/$author/$slug"));
 
     if (response.statusCode != 200) {
       return Future.error(Exception(response.statusCode));
@@ -112,16 +108,16 @@ class TabNewsClient {
 
   static Future<void> recoveryByUsername(String username) async {
     var client = http.Client();
-    var response = await client
-        .post(Uri.parse("$baseUrl/recovery"), body: {"username": username}, headers: headers());
+    var response = await client.post(Uri.parse("$baseUrl/recovery"),
+        body: {"username": username}, headers: headers());
     if (response.statusCode != 201) {
       return Future.error(Exception(response.statusCode));
     }
   }
 
   static Future<void> recoveryByEmail(String email) async {
-    var response =
-    await client.post(Uri.parse("$baseUrl/recovery"), body: {"email": email}, headers: headers());
+    var response = await client.post(Uri.parse("$baseUrl/recovery"),
+        body: {"email": email}, headers: headers());
     if (response.statusCode != 201) {
       return Future.error(Exception(response.statusCode));
     }
@@ -131,10 +127,10 @@ class TabNewsClient {
       {String? username, String? email, required bool notifications}) async {
     var user = await getUser();
     Map<String, dynamic> body = {'notifications': notifications};
-    if(username != null){
+    if (username != null) {
       body["username"] = username;
     }
-    if(email != null){
+    if (email != null) {
       body["email"] = email;
     }
     var response = await client.patch(
@@ -143,6 +139,38 @@ class TabNewsClient {
         body: jsonEncode(body));
     if (response.statusCode != 200) {
       return Future.error(Exception(jsonDecode(response.body)));
+    }
+  }
+
+  Future<void> upvote(Content content) async {
+    var response = await client.post(
+      Uri.parse(
+        "$baseUrl/contents/${content.owner_username}/${content.slug}/tabcoins",
+      ),
+      headers: authHeaders(),
+      body: {
+        "transaction_type": "credit",
+      },
+    );
+
+    if (response.statusCode != 201) {
+      return Future.error(Exception(response.statusCode));
+    }
+  }
+
+  Future<void> downvote(Content content) async {
+    var response = await client.post(
+      Uri.parse(
+        "$baseUrl/contents/${content.owner_username}/${content.slug}/tabcoins",
+      ),
+      headers: authHeaders(),
+      body: {
+        "transaction_type": "debit",
+      },
+    );
+
+    if (response.statusCode != 201) {
+      return Future.error(Exception(response.statusCode));
     }
   }
 }
