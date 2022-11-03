@@ -52,6 +52,9 @@ class _ContentListState extends State<ContentList> {
       final newItems = await TabNewsClient.listContents(
           pageKey, _pageSize, widget.strategy);
       final isLastPage = newItems.length < _pageSize;
+      if(!mounted) {
+        return;
+      }
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
@@ -59,7 +62,6 @@ class _ContentListState extends State<ContentList> {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (e) {
-      print(e);
       _pagingController.error = e;
     }
   }

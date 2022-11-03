@@ -1,1 +1,1 @@
-const baseUrl = "https://tabnews.com.br/api/v1";
+const baseUrl = "https://www.tabnews.com.br/api/v1";
