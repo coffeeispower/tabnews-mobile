@@ -61,15 +61,15 @@ class AccountPageState extends State<AccountPage> {
       var client = TabNewsClient(session);
       return Scaffold(
         appBar: AppBar(title: const Text("Perfil")),
-        body: SingleChildScrollView(
-          child: UserBuilder(
-            session: session,
-            builder: (context, user) {
-              enable_notifications ??= user.notifications;
-              username ??= TextEditingController(text: user.username);
-              email ??= TextEditingController(text: user.email);
-              return StatefulBuilder(
-                builder: (context, setState) => SafeArea(
+        body: UserBuilder(
+          session: session,
+          builder: (context, user) {
+            enable_notifications ??= user.notifications;
+            username ??= TextEditingController(text: user.username);
+            email ??= TextEditingController(text: user.email);
+            return StatefulBuilder(
+              builder: (context, setState) => SingleChildScrollView(
+                child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Column(
@@ -141,9 +141,9 @@ class AccountPageState extends State<AccountPage> {
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       );
     }
