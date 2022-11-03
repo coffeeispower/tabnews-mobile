@@ -61,87 +61,89 @@ class AccountPageState extends State<AccountPage> {
       var client = TabNewsClient(session);
       return Scaffold(
         appBar: AppBar(title: const Text("Perfil")),
-        body: UserBuilder(
-          session: session,
-          builder: (context, user) {
-            enable_notifications ??= user.notifications;
-            username ??= TextEditingController(text: user.username);
-            email ??= TextEditingController(text: user.email);
-            return StatefulBuilder(
-              builder: (context, setState) => SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 0.0),
-                        child: Text("Nome de usuário",
-                            style: Theme.of(context).textTheme.titleMedium),
-                      ),
-                      TextField(
-                        controller: username,
-                        enabled: !saving,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 0.0),
-                        child: Text("Email",
-                            style: Theme.of(context).textTheme.titleMedium),
-                      ),
-                      TextField(
-                        enabled: !saving,
-                        controller: email,
-                      ),
-                      CheckboxListTile(
-                        value: enable_notifications,
-                        enabled: !saving,
-                        onChanged: (n) {
-                          setState(() {
-                            enable_notifications = n ?? false;
-                          });
-                        },
-                        title: const Text("Receber notificações por email"),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                      if (!saving)
-                        Center(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                saving = true;
-                              });
-                              var usernameChanged = user.username != username!.value.text;
-                              var emailChanged = user.email != email!.value.text;
-                              client
-                                  .editProfile(
-                                username: usernameChanged ? username?.value.text : null,
-                                email: emailChanged ? email?.value.text : null,
-                                notifications: enable_notifications!,
-                              )
-                                  .then((a) {
+        body: SingleChildScrollView(
+          child: UserBuilder(
+            session: session,
+            builder: (context, user) {
+              enable_notifications ??= user.notifications;
+              username ??= TextEditingController(text: user.username);
+              email ??= TextEditingController(text: user.email);
+              return StatefulBuilder(
+                builder: (context, setState) => SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16.0, horizontal: 0.0),
+                          child: Text("Nome de usuário",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                        TextField(
+                          controller: username,
+                          enabled: !saving,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16.0, horizontal: 0.0),
+                          child: Text("Email",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                        TextField(
+                          enabled: !saving,
+                          controller: email,
+                        ),
+                        CheckboxListTile(
+                          value: enable_notifications,
+                          enabled: !saving,
+                          onChanged: (n) {
+                            setState(() {
+                              enable_notifications = n ?? false;
+                            });
+                          },
+                          title: const Text("Receber notificações por email"),
+                          controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                        if (!saving)
+                          Center(
+                            child: OutlinedButton(
+                              onPressed: () {
                                 setState(() {
-                                  saving = false;
+                                  saving = true;
                                 });
-                              });
-                            },
-                            child: const Text("Salvar"),
+                                var usernameChanged = user.username != username!.value.text;
+                                var emailChanged = user.email != email!.value.text;
+                                client
+                                    .editProfile(
+                                  username: usernameChanged ? username?.value.text : null,
+                                  email: emailChanged ? email?.value.text : null,
+                                  notifications: enable_notifications!,
+                                )
+                                    .then((a) {
+                                  setState(() {
+                                    saving = false;
+                                  });
+                                });
+                              },
+                              child: const Text("Salvar"),
+                            ),
                           ),
-                        ),
-                      if (saving)
-                        const Center(
-                          child: OutlinedButton(
-                            onPressed: null,
-                            child: Text("Salvando..."),
+                        if (saving)
+                          const Center(
+                            child: OutlinedButton(
+                              onPressed: null,
+                              child: Text("Salvando..."),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     }

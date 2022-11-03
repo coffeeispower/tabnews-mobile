@@ -18,60 +18,62 @@ class LoginPageState extends State<StatefulWidget> {
     var sessionState = context.read<SessionState>();
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
-      body: Center(
-        child: Card(
-          elevation: 20.0,
-          margin: const EdgeInsets.all(15.0),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(icon: Icon(Icons.email_outlined), labelText: "Email"),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Card(
+            elevation: 20.0,
+            margin: const EdgeInsets.all(15.0),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(icon: Icon(Icons.email_outlined), labelText: "Email"),
 
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: passwordController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), icon: Icon(Icons.password), labelText: "Password"),
-                    obscureText: true,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: passwordController,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), icon: Icon(Icons.password), labelText: "Password"),
+                      obscureText: true,
+                    ),
                   ),
-                ),
-                if(!loggingIn)
-                ElevatedButton(
-                  onPressed: () {
+                  if(!loggingIn)
+                  ElevatedButton(
+                    onPressed: () {
 
-                    setState(() {
-                      loggingIn = true;
-                    });
-                    TabNewsClient.login(LoginRequest(email: emailController.value.text, password: passwordController.value.text)).then((session) {
-                      TabNewsClient.saveSession(session);
-                      sessionState.setSession(session);
                       setState(() {
-                        loggingIn = false;
+                        loggingIn = true;
                       });
-                      Navigator.pop(context);
-                    });
+                      TabNewsClient.login(LoginRequest(email: emailController.value.text, password: passwordController.value.text)).then((session) {
+                        TabNewsClient.saveSession(session);
+                        sessionState.setSession(session);
+                        setState(() {
+                          loggingIn = false;
+                        });
+                        Navigator.pop(context);
+                      });
 
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                    child: Text("Entrar"),
-                  ),
-                ) else const ElevatedButton(
-                  onPressed: null,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                    child: Text("Entrando...")
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                      child: Text("Entrar"),
+                    ),
+                  ) else const ElevatedButton(
+                    onPressed: null,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                      child: Text("Entrando...")
+                    )
                   )
-                )
-              ],
+                ],
+              ),
             ),
           ),
         ),
