@@ -9,8 +9,6 @@ import "package:timeago/timeago.dart" as timeago;
 import 'client/client.dart';
 import 'components/account_page.dart';
 
-SessionState session = SessionState();
-
 void main() {
   timeago.setLocaleMessages("pt", timeago.PtBrMessages());
   runApp(App());
@@ -22,13 +20,11 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider0<SessionState>(
+    return ChangeNotifierProvider<SessionState>(
       create: (_) {
+        var session = SessionState();
         session.loadSession();
         return session;
-      },
-      update: (context, newSession) {
-        return newSession!;
       },
       child: MaterialApp(
         title: 'TabNews',
