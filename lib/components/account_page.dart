@@ -148,10 +148,7 @@ class AccountPageState extends State<AccountPage> {
                           ),
                         if (saving)
                           const Center(
-                            child: OutlinedButton(
-                              onPressed: null,
-                              child: Text("Salvando..."),
-                            ),
+                            child: CircularProgressIndicator(),
                           ),
                       ],
                     ),

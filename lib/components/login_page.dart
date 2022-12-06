@@ -69,7 +69,7 @@ class LoginPageState extends State<StatefulWidget> {
                     onPressed: null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                      child: Text("Entrando...")
+                      child: CircularProgressIndicator()
                     )
                   )
                 ],
