@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabnews_flutter/client/client.dart';
+import 'package:tabnews_flutter/components/alert_box.dart';
 import 'package:tabnews_flutter/components/user_builder.dart';
 import 'package:tabnews_flutter/main.dart';
 
@@ -15,10 +15,12 @@ class AccountPage extends StatefulWidget {
 }
 
 class AccountPageState extends State<AccountPage> {
-  bool? enable_notifications = null;
+  bool? enable_notifications;
   TextEditingController? username;
   TextEditingController? email;
   bool saving = false;
+
+  dynamic error;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class AccountPageState extends State<AccountPage> {
 
     if (sessionState.isLoading) {
       return Scaffold(
-        appBar: AppBar(title: Text("Perfil")),
+        appBar: AppBar(title: const Text("Perfil")),
         body: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -75,9 +77,12 @@ class AccountPageState extends State<AccountPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (error != null) AlertBox.fromError(error),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 16.0, horizontal: 0.0),
+                            vertical: 16.0,
+                            horizontal: 0.0,
+                          ),
                           child: Text("Nome de usuário",
                               style: Theme.of(context).textTheme.titleMedium),
                         ),
@@ -113,16 +118,27 @@ class AccountPageState extends State<AccountPage> {
                                 setState(() {
                                   saving = true;
                                 });
-                                var usernameChanged = user.username != username!.value.text;
-                                var emailChanged = user.email != email!.value.text;
+                                var usernameChanged =
+                                    user.username != username!.value.text;
+                                var emailChanged =
+                                    user.email != email!.value.text;
                                 client
                                     .editProfile(
-                                  username: usernameChanged ? username?.value.text : null,
-                                  email: emailChanged ? email?.value.text : null,
-                                  notifications: enable_notifications!,
+                                  username: usernameChanged
+                                      ? username?.value.text
+                                      : null,
+                                  email:
+                                      emailChanged ? email?.value.text : null,
+                                  notifications: enable_notifications,
                                 )
                                     .then((a) {
                                   setState(() {
+                                    error = null; 
+                                    saving = false;
+                                  });
+                                }).catchError((e) {
+                                  setState(() {
+                                    error = e;
                                     saving = false;
                                   });
                                 });

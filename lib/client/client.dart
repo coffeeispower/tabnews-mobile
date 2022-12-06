@@ -15,9 +15,7 @@ class TabNewsClient {
   TabNewsClient(this.session);
 
   Map<String, String> authHeaders() {
-    return {
-      "Cookie": "session_id=${session.token}"
-    };
+    return {"Cookie": "session_id=${session.token}", "Content-Type": "application/json"};
   }
 
   static Map<String, String> headers() {
@@ -31,7 +29,7 @@ class TabNewsClient {
         await client.get(Uri.parse("$baseUrl/user"), headers: authHeaders());
 
     if (response.statusCode != 200) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     var json = jsonDecode(response.body);
     var user = User.fromJson(json);
@@ -43,7 +41,7 @@ class TabNewsClient {
         headers: authHeaders());
 
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     var json = jsonDecode(response.body);
     var content = Content.fromJson(json);
@@ -56,7 +54,7 @@ class TabNewsClient {
         "$baseUrl/contents?page=$page&per_page=$perPage&strategy=$strategy"));
 
     if (response.statusCode != 200) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     List<dynamic> json = jsonDecode(response.body);
     var contents = List.of(json.map((e) => Content.fromJson(e)));
@@ -68,7 +66,7 @@ class TabNewsClient {
         "$baseUrl/contents/${content.owner_username}/${content.slug}/children"));
 
     if (response.statusCode != 200) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     List<dynamic> json = jsonDecode(response.body);
     return List.of(json.map((e) => Content.fromJson(e)));
@@ -80,7 +78,7 @@ class TabNewsClient {
         await client.get(Uri.parse("$baseUrl/contents/$author/$slug"));
 
     if (response.statusCode != 200) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     var json = jsonDecode(response.body);
     var content = Content.fromJson(json);
@@ -99,7 +97,7 @@ class TabNewsClient {
     var response = await client.post(Uri.parse("$baseUrl/sessions"),
         body: loginRequest.toJson());
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
     var json = jsonDecode(response.body);
     var session = Session.fromJson(json);
@@ -111,7 +109,7 @@ class TabNewsClient {
     var response = await client.post(Uri.parse("$baseUrl/recovery"),
         body: {"username": username}, headers: headers());
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
   }
 
@@ -119,26 +117,31 @@ class TabNewsClient {
     var response = await client.post(Uri.parse("$baseUrl/recovery"),
         body: {"email": email}, headers: headers());
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
   }
 
   Future<void> editProfile(
-      {String? username, String? email, required bool notifications}) async {
+      {String? username, String? email, bool? notifications}) async {
     var user = await getUser();
-    Map<String, dynamic> body = {'notifications': notifications};
+    Map<String, dynamic> settings = {};
+    if (notifications != null) {
+      settings["notifications"] = notifications;
+    }
     if (username != null) {
-      body["username"] = username;
+      settings["username"] = username;
     }
     if (email != null) {
-      body["email"] = email;
+      settings["email"] = email;
     }
+    var a = jsonEncode(settings);
     var response = await client.patch(
-        Uri.parse("$baseUrl/users/${user.username}"),
-        headers: authHeaders(),
-        body: jsonEncode(body));
+      Uri.parse("$baseUrl/users/${user.username}"),
+      headers: authHeaders(),
+      body: a,
+    );
     if (response.statusCode != 200) {
-      return Future.error(Exception(jsonDecode(response.body)));
+      return Future.error(jsonDecode(response.body));
     }
   }
 
@@ -154,7 +157,7 @@ class TabNewsClient {
     );
 
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
   }
 
@@ -170,7 +173,7 @@ class TabNewsClient {
     );
 
     if (response.statusCode != 201) {
-      return Future.error(Exception(response.statusCode));
+      return Future.error(jsonDecode(response.body));
     }
   }
 }
