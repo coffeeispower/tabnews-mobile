@@ -151,9 +151,7 @@ class TabNewsClient {
         "$baseUrl/contents/${content.owner_username}/${content.slug}/tabcoins",
       ),
       headers: authHeaders(),
-      body: {
-        "transaction_type": "credit",
-      },
+      body: jsonEncode({"transaction_type": "credit"}),
     );
 
     if (response.statusCode != 201) {
@@ -167,9 +165,7 @@ class TabNewsClient {
         "$baseUrl/contents/${content.owner_username}/${content.slug}/tabcoins",
       ),
       headers: authHeaders(),
-      body: {
-        "transaction_type": "debit",
-      },
+      body: jsonEncode({"transaction_type": "debit"}),
     );
 
     if (response.statusCode != 201) {
