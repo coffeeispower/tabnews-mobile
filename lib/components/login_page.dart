@@ -40,7 +40,7 @@ class LoginPageState extends State<StatefulWidget> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: passwordController,
-                      decoration: const InputDecoration(border: OutlineInputBorder(), icon: Icon(Icons.password), labelText: "Password"),
+                      decoration: const InputDecoration(icon: Icon(Icons.password), labelText: "Password"),
                       obscureText: true,
                     ),
                   ),
