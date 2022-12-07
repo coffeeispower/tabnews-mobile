@@ -15,7 +15,10 @@ class TabNewsClient {
   TabNewsClient(this.session);
 
   Map<String, String> authHeaders() {
-    return {"Cookie": "session_id=${session.token}", "Content-Type": "application/json"};
+    return {
+      "Cookie": "session_id=${session.token}",
+      "Content-Type": "application/json"
+    };
   }
 
   static Map<String, String> headers() {
@@ -34,18 +37,6 @@ class TabNewsClient {
     var json = jsonDecode(response.body);
     var user = User.fromJson(json);
     return user;
-  }
-
-  Future<Content> publishContent(NewContent content) async {
-    var response = await client.post(Uri.parse("$baseUrl/contents"),
-        headers: authHeaders());
-
-    if (response.statusCode != 201) {
-      return Future.error(jsonDecode(response.body));
-    }
-    var json = jsonDecode(response.body);
-    var content = Content.fromJson(json);
-    return content;
   }
 
   static Future<List<Content>> listContents(
@@ -171,6 +162,39 @@ class TabNewsClient {
     if (response.statusCode != 201) {
       return Future.error(jsonDecode(response.body));
     }
+  }
+
+  Future<Content> createContent({
+    required String body,
+    String status = "published",
+    String? parentId,
+    String? title,
+  }) async {
+    Map<dynamic, dynamic> req = {
+      "body": body,
+      "status": status,
+    };
+    if (title != null) {
+      req["title"] = title;
+    }
+    if (parentId != null) {
+      req["parent_id"] = parentId;
+    }
+    var response = await client.post(
+      Uri.parse(
+        "$baseUrl/contents",
+      ),
+      headers: authHeaders(),
+      body: jsonEncode(req),
+    );
+
+    if (response.statusCode != 201) {
+
+      return Future.error(jsonDecode(response.body));
+    }
+
+    var content = Content.fromJson(jsonDecode(response.body));
+    return content;
   }
 }
 

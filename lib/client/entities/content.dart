@@ -11,7 +11,7 @@ class Content {
   final String? body, source_url, parent_id, title;
   final DateTime created_at, updated_at, published_at;
   final DateTime? deleted_at;
-  final int children_deep_count;
+  int children_deep_count = 0;
   int tabcoins;
   List<Content>? children;
 
@@ -31,7 +31,7 @@ class Content {
         required this.published_at,
         this.deleted_at,
         required this.tabcoins,
-        required this.children_deep_count,
+        this.children_deep_count = 0,
         this.children
       });
 
@@ -43,13 +43,4 @@ class Content {
   Future<void> downvote(TabNewsClient client) async {
     await client.downvote(this);
   }
-}
-
-@JsonSerializable()
-class NewContent {
-  final String title, body, source_url, status;
-  final String? slug;
-
-  NewContent({required this.title, required this.body, required this.source_url, this.status = "published", this.slug});
-  Map<String, dynamic> toJson() => _$NewContentToJson(this);
 }

@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import "package:flutter_markdown/flutter_markdown.dart";
 import 'package:provider/provider.dart';
 import 'package:tabnews_flutter/client/client.dart';
@@ -29,9 +26,6 @@ class ContentLoader extends StatelessWidget {
             return builder(ctx, snap.data!);
           }
           if (snap.hasError) {
-            if (kDebugMode) {
-              print(snap.error);
-            }
             return const Center(
                 child: Text("Um erro ocorreu enquanto esse post carregava."));
           }
@@ -63,8 +57,7 @@ class ContentPage extends StatelessWidget {
 }
 
 class ContentView extends StatefulWidget {
-  ContentView({Key? key, required this.content})
-      : super(key: key);
+  const ContentView({Key? key, required this.content}) : super(key: key);
   final Content content;
 
   @override
@@ -80,7 +73,6 @@ class _ContentViewState extends State<ContentView> {
     super.initState();
     content = widget.content;
   }
-
   @override
   Widget build(BuildContext context) {
     var session = context.watch<SessionState>().session;
@@ -91,9 +83,11 @@ class _ContentViewState extends State<ContentView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               UsernameBadge(author: content.owner_username),
               Text(
@@ -137,15 +131,105 @@ class _ContentViewState extends State<ContentView> {
             ],
           ),
           MarkdownBody(data: content.body!),
+          OutlinedButton(
+            onPressed: client != null
+                ? () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(0.0, 1.0);
+                          const end = Offset.zero;
+                          const curve = Curves.ease;
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          final offsetAnimation = animation.drive(tween);
 
-          const TextButton(
-            onPressed: null,
-            child: Text("Responder"),
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                        pageBuilder: (context, _, __) => RespondContent(
+                          content: content,
+                          onFinish: (content) {
+                            setState(() {
+                              this.content.children!.add(content);
+
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  }
+                : null,
+            child: const Text("Responder"),
           ),
-          ...content.children!
-              .map((e) => ContentView(content: e))
-              .toList(),
+          ...(content.children ?? []).map((e) => ContentView(content: e)).toList(),
         ],
+      ),
+    );
+  }
+}
+
+class RespondContent extends StatefulWidget {
+  final Content content;
+  final Function(Content content) onFinish;
+  const RespondContent({Key? key, required this.content, required this.onFinish}) : super(key: key);
+
+  @override
+  State<RespondContent> createState() => _RespondContentState();
+}
+
+class _RespondContentState extends State<RespondContent> {
+  TextEditingController controller = TextEditingController();
+  bool sending = false;
+
+  @override
+  Widget build(BuildContext context) {
+    var session = context.watch<SessionState>().session;
+    var client = session != null ? TabNewsClient(session) : null;
+    return Scaffold(
+      appBar: AppBar(title: const Text("Respondendo comentário"), actions: [
+        IconButton(
+          onPressed: client != null && !sending
+              ? () {
+                  setState(() => sending = true);
+
+                  client
+                      .createContent(
+                    body: controller.value.text,
+                    parentId: widget.content.id,
+                  )
+                      .catchError((e) {
+                    setState(() => sending = false);
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        "${e["message"]} ${e["action"]}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      backgroundColor: Colors.redAccent,
+                    ));
+                  }).then((content) {
+                    widget.onFinish(content);
+                    Navigator.of(context).pop();
+                  });
+                }
+              : null,
+          icon: const Icon(Icons.check),
+        ),
+      ]),
+      body: TextField(
+        controller: controller,
+        expands: true,
+        maxLines: null,
+        textAlignVertical: TextAlignVertical.top,
+        decoration: const InputDecoration(
+          hintText: "Escreva aqui o seu comentário (markdown)",
+          border: InputBorder.none,
+        ),
+        autofocus: true,
       ),
     );
   }

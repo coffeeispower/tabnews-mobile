@@ -16,7 +16,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_markdown: ^0.6.9+1
-  markdown_editor_plus: ^0.2.13
   google_fonts: ^3.0.1
 dev_dependencies:
   build_runner: ^2.3.2

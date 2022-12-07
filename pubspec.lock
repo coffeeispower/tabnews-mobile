@@ -169,13 +169,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
-  expandable:
-    dependency: transitive
-    description:
-      name: expandable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -247,13 +240,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  font_awesome_flutter:
-    dependency: transitive
-    description:
-      name: font_awesome_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "10.3.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -373,13 +359,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-  markdown_editor_plus:
-    dependency: "direct main"
-    description:
-      name: markdown_editor_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.13"
   matcher:
     dependency: transitive
     description:
