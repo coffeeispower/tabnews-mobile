@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter_session_manager/flutter_session_manager.dart";
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tabnews_flutter/client/entities/auth.dart';
 import 'package:tabnews_flutter/components/content/list.dart';
@@ -29,13 +30,14 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'TabNews',
         theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.blue,
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          ),
+            brightness: Brightness.light,
+            primarySwatch: Colors.blue,
+            inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+            ),
+            textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
@@ -43,8 +45,11 @@ class App extends StatelessWidget {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             contentPadding:
-                EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+            EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           ),
+          textTheme: GoogleFonts.ubuntuTextTheme(
+            ThemeData.dark().textTheme
+          )
         ),
         themeMode: ThemeMode.system,
         home: const HomePage(title: 'TabNews'),
