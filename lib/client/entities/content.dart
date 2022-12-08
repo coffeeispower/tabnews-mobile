@@ -14,32 +14,31 @@ class Content {
   int children_deep_count = 0;
   int tabcoins;
   List<Content>? children;
-
+  bool isComment() => parent_id != null;
   Content(
-      {
-        required this.id,
-        required this.owner_id,
-        this.parent_id,
-        required this.slug,
-        this.title,
-        required this.status,
-        this.source_url,
-        required this.owner_username,
-        this.body,
-        required this.created_at,
-        required this.updated_at,
-        required this.published_at,
-        this.deleted_at,
-        required this.tabcoins,
-        this.children_deep_count = 0,
-        this.children
-      });
+      {required this.id,
+      required this.owner_id,
+      this.parent_id,
+      required this.slug,
+      this.title,
+      required this.status,
+      this.source_url,
+      required this.owner_username,
+      this.body,
+      required this.created_at,
+      required this.updated_at,
+      required this.published_at,
+      this.deleted_at,
+      required this.tabcoins,
+      this.children_deep_count = 0,
+      this.children});
 
   factory Content.fromJson(Map<String, dynamic> json) =>
       _$ContentFromJson(json);
   Future<void> upvote(TabNewsClient client) async {
     await client.upvote(this);
   }
+
   Future<void> downvote(TabNewsClient client) async {
     await client.downvote(this);
   }

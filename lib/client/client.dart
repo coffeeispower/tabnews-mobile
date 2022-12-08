@@ -164,6 +164,49 @@ class TabNewsClient {
     }
   }
 
+  Future<Content> editContent({
+    String? body,
+    String status = "published",
+    String? title,
+    required Content contentToEdit,
+  }) async {
+    Map<dynamic, dynamic> req = {
+      "status": status,
+    };
+    if (body != null) {
+      req["body"] = body;
+    }
+    if (title != null) {
+      req["title"] = title;
+    }
+    var response = await client.patch(
+      Uri.parse(
+        "$baseUrl/contents/${contentToEdit.owner_username}/${contentToEdit.slug}",
+      ),
+      headers: authHeaders(),
+      body: jsonEncode(req),
+    );
+    if (response.statusCode != 200) {
+      return Future.error(jsonDecode(response.body));
+    }
+    var json = jsonDecode(response.body);
+    var content = Content.fromJson(json);
+    return content;
+  }
+
+  Future<void> deleteContent(Content content) async {
+    var response = await client.patch(
+      Uri.parse(
+        "$baseUrl/contents/${content.owner_username}/${content.slug}",
+      ),
+      headers: authHeaders(),
+      body: jsonEncode({"status": "deleted"}),
+    );
+    if (response.statusCode != 200) {
+      return Future.error(jsonDecode(response.body));
+    }
+  }
+
   Future<Content> createContent({
     required String body,
     String status = "published",

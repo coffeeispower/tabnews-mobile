@@ -68,6 +68,7 @@ class ContentView extends StatefulWidget {
 
 class _ContentViewState extends State<ContentView> {
   late Content content;
+  bool deleted = false;
   bool voting = false;
   final upvoteConfettiController =
       confetti.ConfettiController(duration: const Duration(milliseconds: 1));
@@ -99,7 +100,6 @@ class _ContentViewState extends State<ContentView> {
     }).catchError((e) {
       setState(() {
         voting = false;
-        // Show error with snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -129,7 +129,6 @@ class _ContentViewState extends State<ContentView> {
     }).catchError((e) {
       setState(() {
         voting = false;
-        // Show error with snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -147,6 +146,9 @@ class _ContentViewState extends State<ContentView> {
 
   @override
   Widget build(BuildContext context) {
+    if (deleted) {
+      return const SizedBox.shrink();
+    }
     var sessionState = context.watch<SessionState>();
     var session = sessionState.session;
     var client = session != null ? TabNewsClient(session) : null;
@@ -233,13 +235,59 @@ class _ContentViewState extends State<ContentView> {
                     ],
                   ),
                 ],
-              )
+              ),
             ],
           ),
           MarkdownBody(data: content.body!),
-          OutlinedButton(
-            onPressed: client != null ? () => openRespondContent() : null,
-            child: const Text("Responder"),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Row(
+              children: [
+                OutlinedButton(
+                  onPressed:
+                      client != null ? () => openRespondContent(client) : null,
+                  child: const Text("Responder"),
+                ),
+                const Spacer(),
+                if (sessionState.canUpdatePost(content)) ...[
+                  IconButton(
+                      onPressed: () {
+                        openEditContent(client!);
+                      },
+                      icon: const Icon(Icons.edit)),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Deletar"),
+                          content: const Text(
+                            "Tem certeza que deseja deletar este comentário?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancelar"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                deleteContent(client!);
+                              },
+                              child: const Text("Deletar"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                    color: Colors.red,
+                  ),
+                ]
+              ],
+            ),
           ),
           ...(content.children ?? [])
               .map((e) => ContentView(content: e))
@@ -249,7 +297,73 @@ class _ContentViewState extends State<ContentView> {
     );
   }
 
-  openRespondContent() {
+  Future<void> onCommentFinish(TabNewsClient client, String body) async {
+    client
+        .createContent(
+      body: body,
+      parentId: widget.content.id,
+    )
+        .catchError((e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "${e["message"]} ${e["action"]}",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        backgroundColor: Colors.redAccent,
+      ));
+    }).then((content) {
+      setState(() => this.content.children!.add(content));
+      Navigator.of(context).pop();
+    });
+  }
+
+  Future<void> onCommentEditFinish(TabNewsClient client, String body) async {
+    client.editContent(body: body, contentToEdit: content).catchError((e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "${e["message"]} ${e["action"]}",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        backgroundColor: Colors.redAccent,
+      ));
+    }).then((content) {
+      setState(() {
+        this.content = content;
+      });
+
+      Navigator.of(context).pop();
+    });
+  }
+
+  openEditContent(TabNewsClient client) {
+    if (content.isComment()) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+          pageBuilder: (context, _, __) => CommentTextEditor(
+              initialBody: content.body!,
+              onFinish: ((body) => onCommentEditFinish(client, body))),
+        ),
+      );
+    } else {
+      // TODO: implementar edição de post
+      throw UnimplementedError();
+    }
+  }
+
+  openRespondContent(TabNewsClient client) {
     Navigator.of(context).push(
       PageRouteBuilder(
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -265,55 +379,62 @@ class _ContentViewState extends State<ContentView> {
             child: child,
           );
         },
-        pageBuilder: (context, _, __) => RespondContent(
-          content: content,
-          onFinish: (content) {
-            setState(() {
-              this.content.children!.add(content);
-            });
-          },
-        ),
+        pageBuilder: (context, _, __) => CommentTextEditor(
+            onFinish: ((body) => onCommentFinish(client, body))),
       ),
     );
   }
+
+  void deleteContent(TabNewsClient client) {
+    client.deleteContent(content).then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Conteúdo deletado com sucesso",
+          ),
+        ),
+      );
+      setState(() {
+        deleted = true;
+      });
+    }).catchError((e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "${e['message']} ${e['action']}",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    });
+  }
 }
 
-class RespondContent extends StatefulWidget {
-  final Content content;
-  final Function(Content content) onFinish;
-  const RespondContent(
-      {Key? key, required this.content, required this.onFinish})
-      : super(key: key);
+class CommentTextEditor extends StatefulWidget {
+  final void Function(String body) onFinish;
+  final String title;
+  final String initialBody;
+  const CommentTextEditor({
+    Key? key,
+    required this.onFinish,
+    this.title = "Responder comentário",
+    this.initialBody = "",
+  }) : super(key: key);
 
   @override
-  State<RespondContent> createState() => _RespondContentState();
+  State<CommentTextEditor> createState() => _CommentTextEditorState();
 }
 
-class _RespondContentState extends State<RespondContent> {
-  TextEditingController controller = TextEditingController();
+class _CommentTextEditorState extends State<CommentTextEditor> {
+  late TextEditingController controller;
   bool sending = false;
-  void comment(TabNewsClient client) {
-    setState(() => sending = true);
-
-    client
-        .createContent(
-      body: controller.value.text,
-      parentId: widget.content.id,
-    )
-        .catchError((e) {
-      setState(() => sending = false);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          "${e["message"]} ${e["action"]}",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        backgroundColor: Colors.redAccent,
-      ));
-    }).then((content) {
-      widget.onFinish(content);
-      Navigator.of(context).pop();
-    });
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.initialBody);
   }
 
   @override
@@ -321,9 +442,16 @@ class _RespondContentState extends State<RespondContent> {
     var session = context.watch<SessionState>().session;
     var client = session != null ? TabNewsClient(session) : null;
     return Scaffold(
-      appBar: AppBar(title: const Text("Respondendo comentário"), actions: [
+      appBar: AppBar(title: Text(widget.title), actions: [
         IconButton(
-          onPressed: client != null && !sending ? () => comment(client) : null,
+          onPressed: client != null && !sending
+              ? () {
+                  setState(() {
+                    sending = true;
+                  });
+                  widget.onFinish(controller.value.text);
+                }
+              : null,
           icon: const Icon(Icons.check),
         ),
       ]),
