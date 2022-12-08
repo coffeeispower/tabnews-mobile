@@ -73,6 +73,7 @@ class _ContentViewState extends State<ContentView> {
     super.initState();
     content = widget.content;
   }
+
   @override
   Widget build(BuildContext context) {
     var session = context.watch<SessionState>().session;
@@ -85,49 +86,57 @@ class _ContentViewState extends State<ContentView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          Wrap(
+            direction: Axis.horizontal,
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               UsernameBadge(author: content.owner_username),
               Text(
                 timeago.format(content.created_at, locale: "pt"),
                 style: Theme.of(context).textTheme.caption,
               ),
-              IconButton(
-                icon: const Icon(Icons.arrow_drop_up_sharp),
-                onPressed: voting || client == null
-                    ? null
-                    : () {
-                        setState(() {
-                          voting = true;
-                        });
-                        content.upvote(client).then((v) {
-                          setState(() {
-                            content.tabcoins += 1;
-                            voting = false;
-                          });
-                        });
-                      },
-              ),
-              Text(content.tabcoins.toString(),
-                  style: TextStyle(color: Colors.blue[300], fontSize: 15)),
-              IconButton(
-                icon: const Icon(Icons.arrow_drop_down_sharp),
-                onPressed: voting || client == null
-                    ? null
-                    : () {
-                        setState(() {
-                          voting = true;
-                        });
-                        content.downvote(client).then((v) {
-                          setState(() {
-                            content.tabcoins -= 1;
-                            voting = false;
-                          });
-                        });
-                      },
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_up_sharp),
+                    onPressed: voting || client == null
+                        ? null
+                        : () {
+                            setState(() {
+                              voting = true;
+                            });
+                            content.upvote(client).then((v) {
+                              setState(() {
+                                content.tabcoins += 1;
+                                voting = false;
+                              });
+                            });
+                          },
+                  ),
+                  Text(content.tabcoins.toString(),
+                      style: TextStyle(color: Colors.blue[300], fontSize: 15)),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_down_sharp),
+                    onPressed: voting || client == null
+                        ? null
+                        : () {
+                            setState(() {
+                              voting = true;
+                            });
+                            content.downvote(client).then((v) {
+                              setState(() {
+                                content.tabcoins -= 1;
+                                voting = false;
+                              });
+                            });
+                          },
+                  ),
+                ],
+              )
             ],
           ),
           MarkdownBody(data: content.body!),
@@ -155,7 +164,6 @@ class _ContentViewState extends State<ContentView> {
                           onFinish: (content) {
                             setState(() {
                               this.content.children!.add(content);
-
                             });
                           },
                         ),
@@ -165,7 +173,9 @@ class _ContentViewState extends State<ContentView> {
                 : null,
             child: const Text("Responder"),
           ),
-          ...(content.children ?? []).map((e) => ContentView(content: e)).toList(),
+          ...(content.children ?? [])
+              .map((e) => ContentView(content: e))
+              .toList(),
         ],
       ),
     );
@@ -175,7 +185,9 @@ class _ContentViewState extends State<ContentView> {
 class RespondContent extends StatefulWidget {
   final Content content;
   final Function(Content content) onFinish;
-  const RespondContent({Key? key, required this.content, required this.onFinish}) : super(key: key);
+  const RespondContent(
+      {Key? key, required this.content, required this.onFinish})
+      : super(key: key);
 
   @override
   State<RespondContent> createState() => _RespondContentState();
