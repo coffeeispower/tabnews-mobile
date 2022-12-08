@@ -3,6 +3,8 @@ import "package:flutter_session_manager/flutter_session_manager.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tabnews_flutter/client/entities/auth.dart';
+import 'package:tabnews_flutter/client/entities/content.dart';
+import 'package:tabnews_flutter/client/entities/user.dart';
 import 'package:tabnews_flutter/components/content/list.dart';
 import "package:timeago/timeago.dart" as timeago;
 
@@ -66,6 +68,13 @@ class HomePage extends StatefulWidget {
 class SessionState extends ChangeNotifier {
   Session? session;
   late bool isLoading;
+  User user = User.createAnonymous();
+
+  bool canUpdatePost(Content content) {
+    return session != null &&
+        (user.id == content.owner_id ||
+            user.features.contains("update:content:others"));
+  }
 
   SessionState() {
     isLoading = true;
@@ -80,8 +89,15 @@ class SessionState extends ChangeNotifier {
       session = null;
     } else {
       session = Session.fromJson(sessionJson);
+      user = await TabNewsClient(session!).getUser();
     }
     notifyListeners();
+  }
+
+  Future<User> fetchUser() async {
+    user = await TabNewsClient(session!).getUser();
+    notifyListeners();
+    return user;
   }
 
   void setSession(Session session) {

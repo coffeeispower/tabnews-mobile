@@ -189,7 +189,6 @@ class TabNewsClient {
     );
 
     if (response.statusCode != 201) {
-
       return Future.error(jsonDecode(response.body));
     }
 

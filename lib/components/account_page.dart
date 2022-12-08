@@ -64,7 +64,6 @@ class AccountPageState extends State<AccountPage> {
       return Scaffold(
         appBar: AppBar(title: const Text("Perfil")),
         body: UserBuilder(
-          session: session,
           builder: (context, user) {
             enable_notifications ??= user.notifications;
             username ??= TextEditingController(text: user.username);
@@ -133,8 +132,9 @@ class AccountPageState extends State<AccountPage> {
                                 )
                                     .then((a) {
                                   setState(() {
-                                    error = null; 
+                                    error = null;
                                     saving = false;
+                                    sessionState.fetchUser();
                                   });
                                 }).catchError((e) {
                                   setState(() {
