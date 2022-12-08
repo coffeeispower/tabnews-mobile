@@ -118,8 +118,58 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get User from session state
+    var sessionState = context.watch<SessionState>();
+    if (sessionState.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          if (sessionState.session != null) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  sessionState.user.tabcoins.toString(),
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child:
+                      Icon(Icons.square_rounded, color: Colors.blue, size: 16),
+                )
+              ],
+            ),
+            const Padding(padding: EdgeInsets.all(4.0)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  sessionState.user.tabcash.toString(),
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.square_rounded,
+                    color: Colors.green,
+                    size: 16,
+                  ),
+                )
+              ],
+            ),
+            const Padding(padding: EdgeInsets.all(2.0)),
+          ]
+        ],
+      ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: pageViewController,
         children: const [
           ContentList(strategy: Strategy.relevant),

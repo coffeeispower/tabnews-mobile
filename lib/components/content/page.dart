@@ -85,7 +85,7 @@ class _ContentViewState extends State<ContentView> {
     upvoteConfettiController.dispose();
   }
 
-  void upvoteButtonOnPress(TabNewsClient client) {
+  void upvoteButtonOnPress(SessionState sessionState, TabNewsClient client) {
     setState(() {
       voting = true;
     });
@@ -95,6 +95,7 @@ class _ContentViewState extends State<ContentView> {
         voting = false;
         upvoteConfettiController.play();
       });
+      sessionState.fetchUser();
     }).catchError((e) {
       setState(() {
         voting = false;
@@ -114,7 +115,7 @@ class _ContentViewState extends State<ContentView> {
     });
   }
 
-  void downvoteButtonOnPress(TabNewsClient client) {
+  void downvoteButtonOnPress(SessionState sessionState, TabNewsClient client) {
     setState(() {
       voting = true;
     });
@@ -124,6 +125,7 @@ class _ContentViewState extends State<ContentView> {
         voting = false;
         downvoteConfettiController.play();
       });
+      sessionState.fetchUser();
     }).catchError((e) {
       setState(() {
         voting = false;
@@ -145,7 +147,8 @@ class _ContentViewState extends State<ContentView> {
 
   @override
   Widget build(BuildContext context) {
-    var session = context.watch<SessionState>().session;
+    var sessionState = context.watch<SessionState>();
+    var session = sessionState.session;
     var client = session != null ? TabNewsClient(session) : null;
     return Padding(
       padding: const EdgeInsets.only(
@@ -192,7 +195,7 @@ class _ContentViewState extends State<ContentView> {
                         icon: const Icon(Icons.arrow_drop_up_sharp),
                         onPressed: voting || client == null
                             ? null
-                            : () => upvoteButtonOnPress(client),
+                            : () => upvoteButtonOnPress(sessionState, client),
                       )
                     ],
                   ),
@@ -205,7 +208,7 @@ class _ContentViewState extends State<ContentView> {
                         icon: const Icon(Icons.arrow_drop_down_sharp),
                         onPressed: voting || client == null
                             ? null
-                            : () => downvoteButtonOnPress(client),
+                            : () => downvoteButtonOnPress(sessionState, client),
                       ),
                       confetti.ConfettiWidget(
                         colors: const [Color.fromARGB(255, 255, 60, 60)],
