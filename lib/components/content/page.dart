@@ -80,7 +80,11 @@ class _ContentViewState extends State<ContentView> {
     var client = session != null ? TabNewsClient(session) : null;
     return Padding(
       padding: const EdgeInsets.only(
-          top: 20.0, bottom: 20.0, right: 10.0, left: 10.0),
+        top: 20.0,
+        bottom: 20.0,
+        right: 10.0,
+        left: 10.0,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,6 +118,22 @@ class _ContentViewState extends State<ContentView> {
                                 content.tabcoins += 1;
                                 voting = false;
                               });
+                            }).catchError((e) {
+                              setState(() {
+                                voting = false;
+                                // Show error with snackbar
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "${e['message']} ${e['action']}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              });
                             });
                           },
                   ),
@@ -131,6 +151,22 @@ class _ContentViewState extends State<ContentView> {
                               setState(() {
                                 content.tabcoins -= 1;
                                 voting = false;
+                              });
+                            }).catchError((e) {
+                              setState(() {
+                                voting = false;
+                                // Show error with snackbar
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "${e['message']} ${e['action']}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               });
                             });
                           },
