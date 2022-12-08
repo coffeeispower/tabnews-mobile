@@ -1,16 +1,15 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-import '../constants.dart' as constants;
 import 'package:json_annotation/json_annotation.dart';
 part 'auth.g.dart';
+
 @JsonSerializable()
 class LoginRequest {
   final String email, password;
   LoginRequest({required this.email, required this.password});
   Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
-  factory LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
+  factory LoginRequest.fromJson(Map<String, dynamic> json) =>
+      _$LoginRequestFromJson(json);
 }
+
 @JsonSerializable()
 class Session {
   final String id, token;
@@ -20,7 +19,13 @@ class Session {
   final DateTime createdAt;
   @JsonKey(name: "updated_at")
   final DateTime updatedAt;
-  Session({required this.id, required this.token, required this.expiresAt, required this.createdAt, required this.updatedAt});
-  factory Session.fromJson(Map<String, dynamic> json) => _$SessionFromJson(json);
+  Session(
+      {required this.id,
+      required this.token,
+      required this.expiresAt,
+      required this.createdAt,
+      required this.updatedAt});
+  factory Session.fromJson(Map<String, dynamic> json) =>
+      _$SessionFromJson(json);
   Map<String, dynamic> toJson() => _$SessionToJson(this);
 }

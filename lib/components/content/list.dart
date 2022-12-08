@@ -10,6 +10,7 @@ class ContentList extends StatefulWidget {
   const ContentList({super.key, required this.strategy});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ContentListState createState() => _ContentListState();
 }
 
@@ -49,10 +50,10 @@ class _ContentListState extends State<ContentList> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await TabNewsClient.listContents(
-          pageKey, _pageSize, widget.strategy);
+      final newItems =
+          await TabNewsClient.listContents(pageKey, _pageSize, widget.strategy);
       final isLastPage = newItems.length < _pageSize;
-      if(!mounted) {
+      if (!mounted) {
         return;
       }
       if (isLastPage) {

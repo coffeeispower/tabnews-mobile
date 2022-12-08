@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import "package:flutter_session_manager/flutter_session_manager.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +11,11 @@ import 'components/account_page.dart';
 
 void main() {
   timeago.setLocaleMessages("pt", timeago.PtBrMessages());
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  App({super.key});
+  const App({super.key});
 
   // This widget is the root of your application.
   @override
@@ -30,27 +29,24 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'TabNews',
         theme: ThemeData(
-            brightness: Brightness.light,
-            primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+          primarySwatch: Colors.blue,
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+          ),
+          textTheme: GoogleFonts.ubuntuTextTheme(),
+        ),
+        darkTheme: ThemeData(
+            brightness: Brightness.dark,
             inputDecorationTheme: const InputDecorationTheme(
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
               contentPadding:
                   EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
             ),
-            textTheme: GoogleFonts.ubuntuTextTheme(),
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            contentPadding:
-            EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          ),
-          textTheme: GoogleFonts.ubuntuTextTheme(
-            ThemeData.dark().textTheme
-          )
-        ),
+            textTheme: GoogleFonts.ubuntuTextTheme(ThemeData.dark().textTheme)),
         themeMode: ThemeMode.system,
         home: const HomePage(title: 'TabNews'),
       ),
