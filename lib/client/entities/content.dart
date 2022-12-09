@@ -42,4 +42,43 @@ class Content {
   Future<void> downvote(TabNewsClient client) async {
     await client.downvote(this);
   }
+
+  // create copyWith
+  Content copyWith({
+    String? id,
+    String? owner_id,
+    String? slug,
+    String? status,
+    String? owner_username,
+    String? body,
+    String? source_url,
+    String? parent_id,
+    String? title,
+    DateTime? created_at,
+    DateTime? updated_at,
+    DateTime? published_at,
+    DateTime? deleted_at,
+    int? tabcoins,
+    List<Content>? children,
+    int? children_deep_count,
+  }) {
+    return Content(
+      id: id ?? this.id,
+      owner_id: owner_id ?? this.owner_id,
+      slug: slug ?? this.slug,
+      status: status ?? this.status,
+      owner_username: owner_username ?? this.owner_username,
+      body: body ?? this.body,
+      source_url: source_url ?? this.source_url,
+      parent_id: parent_id ?? this.parent_id,
+      title: title ?? this.title,
+      created_at: created_at ?? this.created_at,
+      updated_at: updated_at ?? this.updated_at,
+      published_at: published_at ?? this.published_at,
+      deleted_at: deleted_at ?? this.deleted_at,
+      tabcoins: tabcoins ?? this.tabcoins,
+      children: children ?? this.children,
+      children_deep_count: children_deep_count ?? this.children_deep_count,
+    );
+  }
 }

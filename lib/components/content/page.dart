@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import "package:flutter_markdown/flutter_markdown.dart";
 import 'package:provider/provider.dart';
 import 'package:tabnews_flutter/client/client.dart';
+import 'package:tabnews_flutter/components/content/root_content_text_editor.dart';
 import 'package:tabnews_flutter/main.dart';
 import "package:timeago/timeago.dart" as timeago;
 import 'package:confetti/confetti.dart' as confetti;
@@ -298,7 +299,7 @@ class _ContentViewState extends State<ContentView> {
   }
 
   Future<void> onCommentFinish(TabNewsClient client, String body) async {
-    client
+    await client
         .createContent(
       body: body,
       parentId: widget.content.id,
@@ -311,14 +312,19 @@ class _ContentViewState extends State<ContentView> {
         ),
         backgroundColor: Colors.redAccent,
       ));
-    }).then((content) {
-      setState(() => this.content.children!.add(content));
-      Navigator.of(context).pop();
-    });
+    }).then(
+      (content) {
+        setState(() => this.content.children!.add(content));
+        Navigator.of(context).pop();
+      },
+    );
   }
 
-  Future<void> onCommentEditFinish(TabNewsClient client, String body) async {
-    client.editContent(body: body, contentToEdit: content).catchError((e) {
+  Future<void> onContentEditFinish(TabNewsClient client,
+      {String? body, String? title}) async {
+    var newContent = await client
+        .editContent(title: title, body: body, contentToEdit: content)
+        .catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           "${e["message"]} ${e["action"]}",
@@ -326,13 +332,17 @@ class _ContentViewState extends State<ContentView> {
         ),
         backgroundColor: Colors.redAccent,
       ));
-    }).then((content) {
-      setState(() {
-        this.content = content;
-      });
-
-      Navigator.of(context).pop();
     });
+
+    setState(() {
+      content = content.copyWith(
+        body: newContent.body,
+        title: newContent.title,
+      );
+    });
+
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
   }
 
   openEditContent(TabNewsClient client) {
@@ -354,12 +364,34 @@ class _ContentViewState extends State<ContentView> {
           },
           pageBuilder: (context, _, __) => CommentTextEditor(
               initialBody: content.body!,
-              onFinish: ((body) => onCommentEditFinish(client, body))),
+              title: "Editar",
+              onFinish: ((body) => onContentEditFinish(client, body: body))),
         ),
       );
     } else {
-      // TODO: implementar edição de post
-      throw UnimplementedError();
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+          pageBuilder: (context, _, __) => RootContentTextEditor(
+              initialBody: content.body!,
+              editorTitle: "Editar",
+              initialTitle: content.title ?? "",
+              onFinish: ((title, body) async =>
+                  await onContentEditFinish(client, title: title, body: body))),
+        ),
+      );
     }
   }
 
@@ -380,7 +412,7 @@ class _ContentViewState extends State<ContentView> {
           );
         },
         pageBuilder: (context, _, __) => CommentTextEditor(
-            onFinish: ((body) => onCommentFinish(client, body))),
+            onFinish: ((body) async => await onCommentFinish(client, body))),
       ),
     );
   }
@@ -397,6 +429,9 @@ class _ContentViewState extends State<ContentView> {
       setState(() {
         deleted = true;
       });
+      if (!content.isComment()) {
+        Navigator.of(context).pop();
+      }
     }).catchError((e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -414,7 +449,7 @@ class _ContentViewState extends State<ContentView> {
 }
 
 class CommentTextEditor extends StatefulWidget {
-  final void Function(String body) onFinish;
+  final Future<void> Function(String body) onFinish;
   final String title;
   final String initialBody;
   const CommentTextEditor({
@@ -449,7 +484,10 @@ class _CommentTextEditorState extends State<CommentTextEditor> {
                   setState(() {
                     sending = true;
                   });
-                  widget.onFinish(controller.value.text);
+                  widget
+                      .onFinish(controller.value.text)
+                      .then((_) => setState(() => sending = false))
+                      .catchError((_) => setState(() => sending = false));
                 }
               : null,
           icon: const Icon(Icons.check),
