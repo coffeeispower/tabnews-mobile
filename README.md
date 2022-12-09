@@ -1,16 +1,19 @@
-# tabnews_flutter
+# TabNews App
 
-A TabNews flutter front-end
+Um app do tabnews para android e IOS feito em flutter, simples e rápido.
 
-## Getting Started
+![screenshot](screenshot.png)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Como rodar
+1. instale as dependencias do projeto com o comando:
+```bash
+flutter pub get
+```
+2. Rode o build_runner para gerar os arquivos de (de)serialização de json
+```bash
+flutter pub run build_runner build
+```
+3. Rode o app com o comando:
+```bash
+flutter run
+```
